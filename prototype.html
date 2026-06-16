@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD Logic Viewer - ShopVibe E-Commerce</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
+
+.prototype-header { background: #fff; border-bottom: 1px solid #e4e7ed; padding: 16px 32px; display: flex; align-items: center; gap: 12px; }
+.prototype-header h1 { font-size: 18px; font-weight: 600; color: #1a1a1a; }
+.prototype-header .badge { background: #e8f4ff; color: #1677ff; font-size: 12px; padding: 2px 8px; border-radius: 4px; }
+.prototype-container { max-width: 1200px; margin: 24px auto; padding: 0 24px; }
+
+.proto-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 24px; margin-bottom: 20px; }
+.proto-card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #1a1a1a; border-left: 3px solid #1677ff; padding-left: 10px; }
+.proto-btn { display: inline-block; padding: 8px 20px; border-radius: 6px; border: 1px solid #d9d9d9; background: #fff; cursor: pointer; font-size: 14px; color: #333; transition: all 0.2s; margin: 4px; }
+.proto-btn.primary { background: #1677ff; color: #fff; border-color: #1677ff; }
+.proto-btn.danger { background: #ff4d4f; color: #fff; border-color: #ff4d4f; }
+.proto-btn:hover { opacity: 0.85; }
+.proto-input { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; outline: none; width: 240px; }
+.proto-input:focus { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,0.1); }
+.proto-select { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; outline: none; background: #fff; min-width: 160px; }
+.proto-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.proto-table th, .proto-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+.proto-table th { background: #fafafa; font-weight: 600; color: #666; }
+.proto-tabs { display: flex; border-bottom: 1px solid #e4e7ed; margin-bottom: 16px; }
+.proto-tab { padding: 8px 20px; cursor: pointer; font-size: 14px; color: #666; border-bottom: 2px solid transparent; }
+.proto-tab.active { color: #1677ff; border-bottom-color: #1677ff; }
+.proto-switch { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.proto-switch .track { width: 40px; height: 22px; background: #d9d9d9; border-radius: 11px; position: relative; transition: 0.3s; }
+.proto-switch .track::after { content: ''; width: 18px; height: 18px; background: #fff; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
+.proto-switch.on .track { background: #1677ff; }
+.proto-switch.on .track::after { left: 20px; }
+.proto-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+.proto-tag.blue { background: #e8f4ff; color: #1677ff; }
+.proto-tag.green { background: #e8ffe8; color: #52c41a; }
+.proto-tag.orange { background: #fff7e6; color: #fa8c16; }
+.proto-tag.red { background: #fff2f0; color: #ff4d4f; }
+.proto-filter-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+.proto-stat { display: flex; gap: 24px; margin-bottom: 20px; }
+.proto-stat-item { text-align: center; }
+.proto-stat-item .num { font-size: 28px; font-weight: 700; color: #1677ff; }
+.proto-stat-item .label { font-size: 12px; color: #999; }
+
+/* Hero Banner */
+.hero-banner { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; border-radius: 8px; padding: 48px 40px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+.hero-banner h2 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.hero-banner p { font-size: 16px; opacity: 0.9; margin-bottom: 20px; }
+.hero-banner .hero-btn { background: #fff; color: #764ba2; padding: 12px 32px; border-radius: 6px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; }
+
+/* Product Grid */
+.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.product-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: hidden; }
+.product-card .product-img { background: #f0f0f0; height: 160px; display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 40px; }
+.product-card .product-info { padding: 16px; }
+.product-card .product-name { font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+.product-card .product-price { font-size: 18px; font-weight: 700; color: #ff4d4f; margin-bottom: 8px; }
+.product-card .product-price .original { font-size: 13px; color: #999; text-decoration: line-through; font-weight: 400; margin-left: 6px; }
+.product-card .product-rating { font-size: 12px; color: #fa8c16; margin-bottom: 10px; }
+.product-card .add-cart-btn { width: 100%; padding: 8px; background: #1677ff; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; }
+.product-card .add-cart-btn:hover { background: #0958d9; }
+
+/* Cart Sidebar */
+.cart-summary { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 24px; margin-bottom: 20px; }
+.cart-summary .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+.cart-summary .cart-item:last-of-type { border-bottom: none; }
+.cart-summary .cart-total { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; margin-top: 8px; border-top: 2px solid #1a1a1a; font-size: 18px; font-weight: 700; }
+
+[data-logic-id] { position: relative; transition: outline 0.15s; }
+[data-logic-id]:hover { outline: 2px dashed rgba(22,119,255,0.35); outline-offset: 2px; border-radius: 4px; cursor: context-menu; }
+
+#logic-context-menu { position: fixed; z-index: 10000; background: #fff; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); padding: 6px 0; min-width: 180px; display: none; }
+#logic-context-menu .menu-item { padding: 8px 16px; cursor: pointer; font-size: 14px; color: #333; display: flex; align-items: center; gap: 8px; transition: background 0.15s; }
+#logic-context-menu .menu-item:hover { background: #f5f5f5; }
+#logic-context-menu .menu-item .icon { font-size: 16px; }
+
+#logic-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 10001; display: none; justify-content: center; align-items: center; }
+#logic-modal-overlay.show { display: flex; }
+#logic-modal { background: #fff; border-radius: 12px; width: 90%; max-width: 640px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+#logic-modal-header { padding: 20px 24px 16px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+#logic-modal-header h3 { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+#logic-modal-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: #f5f5f5; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; color: #999; transition: 0.2s; }
+#logic-modal-close:hover { background: #e8e8e8; color: #333; }
+#logic-modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+#logic-modal-body h1,#logic-modal-body h2,#logic-modal-body h3,#logic-modal-body h4 { margin: 16px 0 8px; color: #1a1a1a; }
+#logic-modal-body h1 { font-size: 18px; } #logic-modal-body h2 { font-size: 16px; } #logic-modal-body h3 { font-size: 15px; }
+#logic-modal-body p { margin: 8px 0; font-size: 14px; color: #555; }
+#logic-modal-body ul, #logic-modal-body ol { margin: 8px 0; padding-left: 20px; font-size: 14px; color: #555; }
+#logic-modal-body li { margin: 4px 0; }
+#logic-modal-body strong { color: #1a1a1a; }
+#logic-modal-body code { background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+#logic-modal-footer { padding: 12px 24px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 8px; }
+#logic-modal-footer .source-link { font-size: 12px; color: #999; align-self: center; }
+
+.help-tip { position: fixed; bottom: 20px; right: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 12px 16px; font-size: 13px; color: #666; z-index: 9999; display: flex; align-items: center; gap: 8px; }
+.help-tip .key { background: #f0f0f0; padding: 2px 8px; border-radius: 4px; font-size: 12px; border: 1px solid #ddd; }
+
+.layout-row { display: flex; gap: 20px; }
+.layout-row .main-col { flex: 1; }
+.layout-row .side-col { width: 320px; }
+</style>
+</head>
+<body>
+
+<div class="prototype-header">
+  <h1>ShopVibe</h1>
+  <span class="badge">PRD Logic Viewer</span>
+</div>
+
+<div class="prototype-container">
+
+  <!-- Stats Bar -->
+  <div class="proto-stat" data-logic-id="module_stats">
+    <div class="proto-stat-item"><div class="num">12,847</div><div class="label">Active Users</div></div>
+    <div class="proto-stat-item"><div class="num">3,256</div><div class="label">Orders Today</div></div>
+    <div class="proto-stat-item"><div class="num">$89.4K</div><div class="label">Revenue Today</div></div>
+    <div class="proto-stat-item"><div class="num">4.8</div><div class="label">Avg Rating</div></div>
+  </div>
+
+  <!-- Hero Banner -->
+  <div class="hero-banner" data-logic-id="module_hero">
+    <div>
+      <h2>Summer Sale — Up to 60% Off</h2>
+      <p>Limited-time deals on top brands. Free shipping on orders over $50.</p>
+      <button class="hero-btn" data-logic-id="btn_shop_now">Shop Now</button>
+    </div>
+    <div style="font-size: 80px; opacity: 0.3;">🛍️</div>
+  </div>
+
+  <!-- Search & Filter -->
+  <div class="proto-card">
+    <div class="proto-filter-bar" data-logic-id="module_search_filter">
+      <input class="proto-input" placeholder="Search products..." style="flex:1;" data-logic-id="input_search" />
+      <select class="proto-select" data-logic-id="select_category">
+        <option>All Categories</option>
+        <option>Electronics</option>
+        <option>Fashion</option>
+        <option>Home & Living</option>
+        <option>Sports</option>
+      </select>
+      <select class="proto-select" data-logic-id="select_sort">
+        <option>Sort: Recommended</option>
+        <option>Price: Low to High</option>
+        <option>Price: High to Low</option>
+        <option>Newest First</option>
+        <option>Best Rated</option>
+      </select>
+      <button class="proto-btn primary" data-logic-id="btn_apply_filter">Apply</button>
+    </div>
+  </div>
+
+  <div class="layout-row">
+    <div class="main-col">
+
+      <!-- Product Grid -->
+      <div class="product-grid">
+        <div class="product-card" data-logic-id="product_card">
+          <div class="product-img">📷</div>
+          <div class="product-info">
+            <div class="product-name">Wireless Noise-Cancel Headphones</div>
+            <div class="product-rating">★★★★★ (2,341)</div>
+            <div class="product-price">$79.99 <span class="original">$129.99</span></div>
+            <button class="add-cart-btn" data-logic-id="btn_add_cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img">📷</div>
+          <div class="product-info">
+            <div class="product-name">Smart Fitness Watch Pro</div>
+            <div class="product-rating">★★★★☆ (1,876)</div>
+            <div class="product-price">$149.00 <span class="original">$249.00</span></div>
+            <button class="add-cart-btn" data-logic-id="btn_add_cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img">📷</div>
+          <div class="product-info">
+            <div class="product-name">Ultra-Slim Laptop Stand</div>
+            <div class="product-rating">★★★★★ (987)</div>
+            <div class="product-price">$34.99</div>
+            <button class="add-cart-btn" data-logic-id="btn_add_cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img">📷</div>
+          <div class="product-info">
+            <div class="product-name">Organic Cotton T-Shirt</div>
+            <div class="product-rating">★★★★☆ (3,102)</div>
+            <div class="product-price">$24.99 <span class="original">$39.99</span></div>
+            <button class="add-cart-btn" data-logic-id="btn_add_cart">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Tabs -->
+      <div class="proto-card">
+        <div class="proto-tabs" data-logic-id="module_product_tabs">
+          <div class="proto-tab active" data-logic-id="tab_description">Description</div>
+          <div class="proto-tab" data-logic-id="tab_reviews">Reviews (5,306)</div>
+          <div class="proto-tab" data-logic-id="tab_shipping">Shipping & Returns</div>
+        </div>
+        <p style="font-size:14px; color:#555; line-height:1.8;">
+          Premium quality product with carefully selected materials. Designed for everyday comfort and durability.
+          Our products go through rigorous quality checks to ensure the best experience for our customers.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="side-col">
+
+      <!-- Cart Summary -->
+      <div class="cart-summary" data-logic-id="module_cart">
+        <h2 style="font-size:16px; font-weight:600; margin-bottom:16px; color:#1a1a1a; border-left: 3px solid #1677ff; padding-left: 10px;">Shopping Cart</h2>
+        <div class="cart-item">
+          <span>Wireless Headphones × 1</span>
+          <span>$79.99</span>
+        </div>
+        <div class="cart-item">
+          <span>Fitness Watch × 1</span>
+          <span>$149.00</span>
+        </div>
+        <div class="cart-item">
+          <span>T-Shirt × 2</span>
+          <span>$49.98</span>
+        </div>
+        <div class="cart-total">
+          <span>Total</span>
+          <span>$278.97</span>
+        </div>
+        <button class="proto-btn primary" style="width:100%; margin-top:16px; padding:12px;" data-logic-id="btn_checkout">Proceed to Checkout</button>
+      </div>
+
+      <!-- Coupon -->
+      <div class="proto-card" data-logic-id="module_coupon">
+        <h2 style="font-size:16px; font-weight:600; margin-bottom:12px; color:#1a1a1a; border-left: 3px solid #1677ff; padding-left: 10px;">Coupon Code</h2>
+        <div style="display:flex; gap:8px;">
+          <input class="proto-input" placeholder="Enter code" style="flex:1;" data-logic-id="input_coupon" />
+          <button class="proto-btn primary" data-logic-id="btn_apply_coupon">Apply</button>
+        </div>
+      </div>
+
+      <!-- Wishlist Toggle -->
+      <div class="proto-card">
+        <div class="proto-switch on" data-logic-id="switch_wishlist">
+          <div class="track"></div>
+          <span>Add to Wishlist</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div id="logic-context-menu">
+  <div class="menu-item" id="menu-view-logic">
+    <span class="icon">📋</span>View Logic
+  </div>
+</div>
+
+<div id="logic-modal-overlay">
+  <div id="logic-modal">
+    <div id="logic-modal-header">
+      <h3 id="logic-modal-title">Logic Details</h3>
+      <button id="logic-modal-close">✕</button>
+    </div>
+    <div id="logic-modal-body"></div>
+    <div id="logic-modal-footer">
+      <span class="source-link">Source: PRD Document</span>
+    </div>
+  </div>
+</div>
+
+<div class="help-tip">
+  <span class="key">Right-click</span> on functional elements to view PRD logic
+</div>
+
+<script>
+const logicData = {
+  "module_stats": {
+    name: "Dashboard Statistics Bar",
+    logic: "## Data Source\n- **Active Users**: Real-time count from `user_sessions` table, refreshed every 30 seconds via WebSocket\n- **Orders Today**: Aggregated from `orders` table where `created_at >= TODAY()` in merchant timezone\n- **Revenue Today**: `SUM(order_total)` from today's completed + pending orders\n- **Avg Rating**: Rolling 30-day average from `product_reviews` table\n\n## Business Rules\n- Revenue excludes cancelled and refunded orders\n- Active users = distinct sessions with activity in last 15 minutes\n- Stats bar is visible to admin and merchant roles only\n- If data fetch fails, show last known values with a ⚠️ warning icon"
+  },
+  "module_hero": {
+    name: "Hero Banner — Promotional Campaign",
+    logic: "## Display Logic\n- Banner content is managed via CMS `campaigns` table\n- **Scheduling**: `start_date` / `end_date` determine visibility; auto-hide when expired\n- **Priority**: If multiple campaigns overlap, show the one with highest `priority` field\n- **Fallback**: If no active campaign, show default hero with generic messaging\n\n## Eligibility\n- New users (registered < 7 days): Show \"New Member\" variant with welcome discount code\n- Returning users: Show seasonal/general campaign\n- VIP users (lifetime spend > $500): Show exclusive deals variant\n\n## Tracking\n- Impression fires on banner render (debounced 1s)\n- CTA click fires `campaign_click` event with `campaign_id`, `user_segment`, `position`"
+  },
+  "btn_shop_now": {
+    name: "Shop Now CTA Button",
+    logic: "## Navigation\n- Click → Navigate to `/sale?ref=hero_banner&campaign={campaign_id}`\n- If user is not logged in, redirect to `/login?redirect=/sale&ref=hero_banner`\n\n## Analytics\n- Fire `cta_click` event: `{ source: 'hero_banner', campaign_id, user_segment, timestamp }`\n\n## A/B Testing\n- 50% of users see \"Shop Now\" (control), 50% see \"Explore Deals\" (variant)\n- Button color also tested: primary blue vs gradient purple\n- Track conversion rate for each variant over 7-day window"
+  },
+  "module_search_filter": {
+    name: "Search & Filter Bar",
+    logic: "## Search Behavior\n- **Debounce**: 300ms after user stops typing\n- **Min chars**: Trigger search when input ≥ 2 characters; show popular searches otherwise\n- **Backend**: Calls `GET /api/products/search?q={query}&category={cat}&sort={sort}`\n- **Empty results**: Show \"No products found\" with suggestions and popular categories\n\n## Filter Logic\n- **Category dropdown**: Populated from `categories` table, filtered by merchant's available categories\n- **Sort options**: `recommended` (ML model score), `price_asc`, `price_desc`, `newest`, `rating`\n- **Apply button**: Only enabled when at least one filter differs from current state\n- Filters are additive — selecting category + sort sends both params\n\n## URL Sync\n- All filter states are reflected in URL query params for deep-linking and browser back/forward"
+  },
+  "input_search": {
+    name: "Search Input Field",
+    logic: "## Input Validation\n- Max length: 100 characters; truncate beyond that\n- Disallow special characters: `< > { } | \\ ^`\n- Sanitize input server-side against SQL injection and XSS\n\n## Auto-Complete\n- Show dropdown after 2+ characters, debounced 200ms\n- Source: `GET /api/products/suggest?q={query}&limit=8`\n- Display product name + thumbnail + price in dropdown\n- Keyboard navigation: ↑↓ to select, Enter to search, Esc to close\n\n## Recent Searches\n- Store last 5 searches in `localStorage` per device\n- Show recent searches on focus when input is empty"
+  },
+  "select_category": {
+    name: "Category Selector",
+    logic: "## Data Source\n- Categories loaded from `GET /api/categories?merchant_id={id}`\n- Supports 2-level hierarchy (e.g., Electronics → Headphones)\n- \"All Categories\" is the default option\n\n## Selection Behavior\n- Changing category immediately updates product count badge\n- If search query is active, category filters within search results\n- Selected category is highlighted in sidebar navigation (if visible)"
+  },
+  "select_sort": {
+    name: "Sort Selector",
+    logic: "## Sort Options & Logic\n- **Recommended**: ML ranking score (weight: purchase_rate 40%, rating 30%, recency 20%, margin 10%)\n- **Price Low→High**: `ORDER BY final_price ASC NULLS LAST`\n- **Price High→Low**: `ORDER BY final_price DESC NULLS LAST`\n- **Newest**: `ORDER BY created_at DESC`\n- **Best Rated**: `ORDER BY avg_rating DESC, review_count DESC`\n\n## Rules\n- Products with `is_sponsored = true` are always in top 3 positions regardless of sort\n- Out-of-stock items sorted to bottom unless user explicitly enables \"Show out of stock\"\n- Pagination resets to page 1 on sort change"
+  },
+  "btn_apply_filter": {
+    name: "Apply Filter Button",
+    logic: "## Behavior\n- Collect current state of all filters (search query, category, sort)\n- Build query string and call `GET /api/products?{params}`\n- Show loading spinner during request (max 5s timeout)\n- On success: Update product grid with animation (fade-out old, fade-in new)\n- On failure: Show toast \"Failed to load products. Please try again.\"\n\n## Disabled State\n- Button is disabled (greyed out) when no filter has changed from current state\n- Re-enable when any filter value differs\n\n## Analytics\n- Fire `filter_applied` event with all active filter values"
+  },
+  "product_card": {
+    name: "Product Card Component",
+    logic: "## Display Rules\n- **Image**: Load from `product.images[0].url`, with lazy loading (`loading=\"lazy\"`)\n- **Badge**: Show discount badge if `product.discount_pct > 0` (red tag: \"-{discount}%\")\n- **Price**: Show `final_price`; show `original_price` with strikethrough if `discount_pct > 0`\n- **Rating**: Display stars (0.5 increment) + review count; hide if `review_count < 5`\n\n## Inventory\n- If stock = 0, show \"Out of Stock\" badge, disable \"Add to Cart\" button\n- If stock ≤ 5, show \"Only {n} left!\" in orange text\n\n## Tracking\n- Fire `product_impression` when card enters viewport (IntersectionObserver, threshold 50%)\n- Fire `product_click` on card click with `product_id`, `position`, `page`"
+  },
+  "btn_add_cart": {
+    name: "Add to Cart Button",
+    logic: "## Core Flow\n1. Click → POST `/api/cart/items` with `{ product_id, quantity: 1 }`\n2. On success:\n   - Show green checkmark ✅ animation for 1.5s\n   - Update cart icon badge count in header\n   - Fire `add_to_cart` event: `{ product_id, price, source: 'product_card' }`\n3. On failure:\n   - If 409 (stock insufficient): Toast \"Not enough stock. Only {available} left.\"\n   - If 401: Redirect to login\n   - Other errors: Toast \"Something went wrong. Please try again.\"\n\n## Edge Cases\n- If product already in cart, increment quantity by 1 (max 10 per item)\n- If quantity would exceed 10, show \"Max 10 per item\" toast\n- Debounce rapid clicks (500ms cooldown)\n\n## Visual States\n- Default: Blue \"Add to Cart\"\n- Loading: Spinner icon, disabled\n- Success: Green checkmark, text changes to \"Added ✓\"\n- Out of stock: Grey, text changes to \"Out of Stock\", disabled"
+  },
+  "module_product_tabs": {
+    name: "Product Detail Tabs",
+    logic: "## Tab Structure\n- **Description**: Rich text from CMS, supports images and tables\n- **Reviews**: Paginated list (20 per page), with sort (newest / most helpful) and filter (by rating star)\n- **Shipping & Returns**: Static content from merchant config, varies by region\n\n## Behavior\n- Default active tab: Description\n- Tab switch does NOT reload page — content is pre-fetched on product page load\n- URL hash updates: `#description`, `#reviews`, `#shipping` for deep linking\n- Deep link: If URL contains `#reviews`, auto-switch to Reviews tab on load\n\n## Reviews Tab Specifics\n- Show \"Write a Review\" button if user purchased this item and hasn't reviewed yet\n- Review form: 1-5 star rating + title + body (min 20 chars, max 1000)\n- Reviews require moderation before publishing (merchant setting)"
+  },
+  "tab_description": {
+    name: "Description Tab",
+    logic: "## Content\n- Rendered from `product.description_html` (sanitized via DOMPurify)\n- Supports embedded images (lazy loaded), tables, and formatted text\n\n## SEO\n- Description content is also rendered in a hidden `<div>` for search engine crawlers\n- Product specs table is extracted for structured data (JSON-LD `Product` schema)"
+  },
+  "tab_reviews": {
+    name: "Reviews Tab",
+    logic: "## Loading\n- Reviews fetched via `GET /api/products/{id}/reviews?page=1&sort=newest&limit=20`\n- Show rating distribution bar chart at top (5★ to 1★ with percentages)\n- Show average rating + total count as summary\n\n## Interaction\n- **Helpful button**: POST `/api/reviews/{id}/helpful` — toggle, max 1 per user per review\n- **Report**: Opens modal to flag inappropriate review (spam / offensive / irrelevant)\n- **Sort**: Dropdown to switch between `newest` and `most_helpful`\n\n## Write Review\n- Only visible to users who: (a) are logged in, (b) have a delivered order containing this product, (c) haven't already reviewed it\n- After submission: Review enters `pending_moderation` state, shown as \"Your review is being moderated\""
+  },
+  "tab_shipping": {
+    name: "Shipping & Returns Tab",
+    logic: "## Shipping\n- Free shipping on orders ≥ $50 (merchant configurable threshold)\n- Standard: 5-7 business days ($4.99 under threshold)\n- Express: 2-3 business days ($9.99)\n- Same-day: Available in select metro areas ($14.99, order before 2PM)\n\n## Returns\n- 30-day return window from delivery date\n- Items must be unused, in original packaging\n- Return shipping: Free for defective items; $5.99 restocking fee for buyer's remorse\n- Refund: Processed within 5-7 business days after item received at warehouse\n- Non-returnable: Final sale items, personalized products, intimate items\n\n## Display Logic\n- Shipping options and prices are fetched from `GET /api/shipping/options?product_id={id}&region={user_region}`\n- Region auto-detected from user's default address; manual override available"
+  },
+  "module_cart": {
+    name: "Shopping Cart Summary",
+    logic: "## Data Source\n- Cart items from `GET /api/cart` (authenticated) or `localStorage` (guest)\n- Sync: Guest cart merges into user cart on login (deduplicate by `product_id`, keep higher quantity)\n\n## Display\n- Each item: Product name, quantity, line total (price × qty)\n- Subtotal = sum of all line totals (before tax, shipping, discounts)\n- Cart icon in header shows item count badge (max display: \"99+\")\n\n## Quantity Update\n- Inline +/- buttons per item (min 1, max 10)\n- On change: PATCH `/api/cart/items/{id}` → recalculate totals\n- If stock drops below current qty, auto-adjust to available stock and notify user\n\n## Empty Cart\n- Show \"Your cart is empty\" with CTA to browse products\n- Hide checkout button"
+  },
+  "btn_checkout": {
+    name: "Proceed to Checkout Button",
+    logic: "## Prerequisites\n- Button enabled only when: (a) cart has ≥ 1 item, (b) all items are in stock\n- If any item is out of stock: Button disabled, show warning \"Some items are no longer available\"\n\n## Flow\n1. Click → POST `/api/checkout/session` to create checkout session\n2. Lock cart items (prevent modifications during checkout)\n3. Redirect to `/checkout?session={session_id}`\n\n## Timer\n- Checkout session expires after 15 minutes of inactivity\n- 2 minutes before expiry: Show warning banner \"Your session is about to expire\"\n- On expiry: Release cart lock, redirect to cart page with \"Session expired\" notice\n\n## Analytics\n- Fire `begin_checkout` event with cart value, item count, and source page"
+  },
+  "module_coupon": {
+    name: "Coupon Code Module",
+    logic: "## Validation\n- Input: alphanumeric, case-insensitive, trimmed\n- Call `POST /api/coupons/validate` with `{ code, cart_total, items[] }`\n\n## Response Handling\n- **Valid**: Show green success message with discount amount, update cart total\n- **Invalid**: Show red error — \"Invalid coupon code\"\n- **Expired**: Show \"This coupon has expired\"\n- **Min not met**: Show \"Minimum order of ${min_amount} required\"\n- **Already used**: Show \"This coupon has already been applied\" (for one-time codes)\n- **Product restriction**: Show \"This coupon doesn't apply to items in your cart\"\n\n## Rules\n- Only 1 coupon per order (applying a new one replaces the old)\n- Coupon applied to `subtotal` before tax and shipping\n- Stackable discounts: Coupon applied AFTER any automatic campaign discounts\n\n## Clear\n- Show \"Remove\" link next to applied coupon\n- Clicking Remove recalculates cart total without coupon"
+  },
+  "input_coupon": {
+    name: "Coupon Input Field",
+    logic: "## Input Rules\n- Max length: 20 characters\n- Auto-uppercase display (stored as-is for API call)\n- Allowed characters: A-Z, 0-9, hyphen\n- Paste supported, auto-trim whitespace\n\n## UX\n- Show \"Applying...\" loading state after 300ms debounce on Enter/Apply click\n- Disable input while validation is in progress"
+  },
+  "btn_apply_coupon": {
+    name: "Apply Coupon Button",
+    logic: "## Behavior\n1. Read coupon input value (trimmed, uppercased)\n2. If empty: Show \"Please enter a coupon code\"\n3. Call `POST /api/coupons/validate` with code + cart context\n4. On success: Update cart summary with discounted total, show success toast\n5. On failure: Show specific error message from API response\n\n## Rate Limiting\n- Max 5 attempts per session; after that, show \"Too many attempts. Please try again later.\"\n- Reset counter on successful application"
+  },
+  "switch_wishlist": {
+    name: "Wishlist Toggle Switch",
+    logic: "## Toggle Behavior\n- **ON**: POST `/api/wishlist/items` with `{ product_id }` → Add to wishlist\n- **OFF**: DELETE `/api/wishlist/items/{product_id}` → Remove from wishlist\n\n## Visual States\n- ON: Blue track, right-aligned knob\n- OFF: Grey track, left-aligned knob\n- Loading: Brief spinner overlay during API call\n\n## Rules\n- Requires authentication — if guest, show login prompt modal\n- Max 100 items per wishlist; show toast when limit reached\n- Duplicate add: Return 200 (idempotent), don't add twice\n\n## Sync\n- Wishlist count updates in header icon in real-time\n- Wishlist page auto-refreshes if currently open (via WebSocket event)"
+  }
+};
+
+const contextMenu = document.getElementById('logic-context-menu');
+const menuViewLogic = document.getElementById('menu-view-logic');
+let currentLogicId = null;
+
+document.addEventListener('contextmenu', function(e) {
+  const target = e.target.closest('[data-logic-id]');
+  if (target) {
+    e.preventDefault();
+    currentLogicId = target.getAttribute('data-logic-id');
+    if (logicData[currentLogicId]) {
+      contextMenu.style.display = 'block';
+      contextMenu.style.left = e.clientX + 'px';
+      contextMenu.style.top = e.clientY + 'px';
+      const rect = contextMenu.getBoundingClientRect();
+      if (rect.right > window.innerWidth) contextMenu.style.left = (e.clientX - rect.width) + 'px';
+      if (rect.bottom > window.innerHeight) contextMenu.style.top = (e.clientY - rect.height) + 'px';
+    }
+  } else {
+    contextMenu.style.display = 'none';
+  }
+});
+
+document.addEventListener('click', function() {
+  contextMenu.style.display = 'none';
+});
+
+menuViewLogic.addEventListener('click', function() {
+  if (!currentLogicId || !logicData[currentLogicId]) return;
+  const data = logicData[currentLogicId];
+  document.getElementById('logic-modal-title').textContent = data.name;
+  document.getElementById('logic-modal-body').innerHTML = renderMarkdown(data.logic);
+  document.getElementById('logic-modal-overlay').classList.add('show');
+  contextMenu.style.display = 'none';
+});
+
+const overlay = document.getElementById('logic-modal-overlay');
+document.getElementById('logic-modal-close').addEventListener('click', function() {
+  overlay.classList.remove('show');
+});
+overlay.addEventListener('click', function(e) {
+  if (e.target === overlay) overlay.classList.remove('show');
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') overlay.classList.remove('show');
+});
+
+function renderMarkdown(text) {
+  if (!text) return '';
+  let html = text
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+  html = html.replace(/(<li>.*<\/li>)/gs, function(match) {
+    if (!match.startsWith('<ul>')) return '<ul>' + match + '</ul>';
+    return match;
+  });
+  return '<p>' + html + '</p>';
+}
+</script>
+
+</body>
+</html>
