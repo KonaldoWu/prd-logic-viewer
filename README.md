@@ -9,6 +9,15 @@
 
 ---
 
+## 🎯 Live Preview
+
+👉 [在线预览 Prototype 页面](https://konaldowu.github.io/prd-logic-viewer/prototype.html) — 右键任意功能元素查看 PRD 逻辑描述
+
+<!-- 截图位置：将截图文件放入仓库后替换下方占位符 -->
+![Prototype Preview1](png1.png)
+![Prototype Preview2](png2.png)
+---
+
 ## 中文说明
 
 ### 痛点
@@ -142,4 +151,7 @@ const logicData = {
 ## License
 
 [MIT](./LICENSE)
+
+---
+
 
